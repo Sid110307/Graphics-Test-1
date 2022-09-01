@@ -21,13 +21,17 @@ private:
 
 		layout (location = 0) in vec3 position;
 		layout (location = 1) in vec3 color;
+		layout (location = 2) in vec2 textureCoords;
 
 		out vec3 outputColor;
+		out vec2 outputTextureCoords;
 		uniform float scale;
 
 		void main() {
 			gl_Position = vec4(position.x * scale, position.y * scale, position.z * scale, 1.0f);
+
 			outputColor = color;
+			outputTextureCoords = textureCoords;
 		}
 	)glsl";
 
@@ -35,10 +39,13 @@ private:
 		#version 330 core
 
 		in vec3 outputColor;
+		in vec2 outputTextureCoords;
+
 		out vec4 fragmentColor;
+		uniform sampler2D texture;
 
 		void main() {
-			fragmentColor = vec4(outputColor, 1.0);
+			fragmentColor = texture2D(texture, outputTextureCoords) * vec4(outputColor, 1.0f);
 		}
 	)glsl";
 
