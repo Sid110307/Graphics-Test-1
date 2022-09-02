@@ -1,4 +1,4 @@
-#include "./arrayObject.h"
+#include "arrayObject.h"
 
 ArrayObject::ArrayObject() : ID(0)
 {

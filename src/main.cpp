@@ -5,38 +5,26 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
-#include "./shader.h"
-#include "./arrayObject.h"
-#include "./arrayBuffer.h"
+#include "shader.h"
+#include "texture.h"
+#include "arrayObject.h"
+#include "arrayBuffer.h"
 
 constexpr int SCREEN_WIDTH = 800;
 constexpr int SCREEN_HEIGHT = 800;
 
-//GLfloat vertices[] = {
-//		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, 0.8f, 0.3f, 0.02f,
-//		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, 0.8f, 0.3f, 0.02f,
-//		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 1.0f, 0.6f, 0.32f,
-//		-0.25f, 0.5f * float(sqrt(3)) / 6, 0.0f, 0.9f, 0.45f, 0.17f,
-//		0.25f, 0.5f * float(sqrt(3)) / 6, 0.0f, 0.9f, 0.45f, 0.17f,
-//		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f, 0.8f, 0.3f, 0.02f,
-//};
-
-//GLuint indices[] = {
-//		0, 3, 5,
-//		3, 2, 4,
-//		5, 4, 1,
-//};
-
 GLfloat vertices[] = {
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+//  Position              Color               Texture coordinates
+//  X      Y      Z       R     G     B       X     Y
+	-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
+	-0.5f, 0.5f,  0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+	0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+	0.5f,  -0.5f, 0.0f,   0.0f, 0.0f, 0.5f,   1.0f, 0.0f,
 };
 
 GLuint indices[] = {
-		0, 2, 1,
-		0, 3, 2,
+	0, 1, 2,
+	2, 3, 0,
 };
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
@@ -45,6 +33,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -82,30 +71,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	VBO.Unbind();
 	IBO.Unbind();
 
-	GLint width, height, channels;
-	unsigned char* data = stbi_load("./textures/texture.jpg", &width, &height,
-									&channels, 0);
-
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-				 GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	stbi_image_free(data);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 	GLint shaderScale = glGetUniformLocation(shader.ID, "scale");
-	GLint shaderTexture = glGetUniformLocation(shader.ID, "texture");
+
+	std::string cwd = std::filesystem::current_path().string();
+	cwd = cwd.substr(0, cwd.find("bin") - 1);
+	cwd += "/tests/textures/1920x1080.jpg";
+	
+	std::cout << cwd << std::endl;
+
+	Texture texture(cwd.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	texture.textureUnit(shader, "textureSampler", 0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -113,13 +88,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		shader.Activate();
 
-		glUniform1f(shaderScale, 0.75f);
-		glUniform1i(shaderTexture, 0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		VAO.Bind();
+		glUniform1f(shaderScale, 0.5f);
+		texture.Bind();
 
+		VAO.Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint),
 					   GL_UNSIGNED_INT, nullptr);
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -127,6 +102,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	VAO.Destroy();
 	IBO.Destroy();
 	VBO.Destroy();
+	
+	texture.Destroy();
 	shader.Destroy();
 
 	glfwDestroyWindow(window);

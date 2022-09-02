@@ -28,7 +28,7 @@ private:
 		uniform float scale;
 
 		void main() {
-			gl_Position = vec4(position.x * scale, position.y * scale, position.z * scale, 1.0f);
+			gl_Position = vec4(position.x + (position.x * scale), position.y + (position.y * scale), position.z + (position.z * scale), 1.0f);
 
 			outputColor = color;
 			outputTextureCoords = textureCoords;
@@ -42,10 +42,10 @@ private:
 		in vec2 outputTextureCoords;
 
 		out vec4 fragmentColor;
-		uniform sampler2D texture;
+		uniform sampler2D textureSampler;
 
 		void main() {
-			fragmentColor = texture2D(texture, outputTextureCoords) * vec4(outputColor, 1.0f);
+			fragmentColor = texture(textureSampler, outputTextureCoords);
 		}
 	)glsl";
 

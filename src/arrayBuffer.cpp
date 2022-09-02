@@ -1,4 +1,4 @@
-#include "./arrayBuffer.h"
+#include "arrayBuffer.h"
 
 ArrayBuffer::ArrayBuffer(GLuint* indices, GLsizeiptr size) : ID(0)
 {
