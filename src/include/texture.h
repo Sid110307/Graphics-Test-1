@@ -8,13 +8,13 @@
 class Texture
 {
 public:
-	GLuint ID;
+	GLuint id;
 	GLenum textureType;
 
 	Texture(const GLchar*, GLenum, GLenum, GLenum, GLenum);
 
 	void textureUnit(Shader &, const GLchar*, GLuint);
-	void Bind();
-	void Unbind();
-	void Destroy();
+	void bind();
+	void unbind();
+	void destroy();
 };

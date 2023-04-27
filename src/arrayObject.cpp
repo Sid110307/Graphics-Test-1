@@ -1,31 +1,30 @@
-#include "arrayObject.h"
+#include "include/arrayObject.h"
 
-ArrayObject::ArrayObject() : ID(0)
+ArrayObject::ArrayObject() : id(0)
 {
-	glGenVertexArrays(1, &ID);
+	glGenVertexArrays(1, &id);
 }
 
-void ArrayObject::LinkAttribute(VertexBuffer object, GLuint layout, GLint size,
-								GLenum type, GLint stride, void* offset)
+void ArrayObject::linkAttribute(VertexBuffer object, GLuint layout, GLint size, GLenum type, GLint stride, void* offset)
 {
-	object.Bind();
+	object.bind();
 
 	glVertexAttribPointer(layout, size, type, GL_FALSE, stride, offset);
 	glEnableVertexAttribArray(layout);
-	object.Unbind();
+	object.unbind();
 }
 
-void ArrayObject::Bind() const
+void ArrayObject::bind() const
 {
-	glBindVertexArray(ID);
+	glBindVertexArray(id);
 }
 
-void ArrayObject::Unbind()
+void ArrayObject::unbind()
 {
 	glBindVertexArray(0);
 }
 
-void ArrayObject::Destroy()
+void ArrayObject::destroy()
 {
-	glDeleteVertexArrays(1, &ID);
+	glDeleteVertexArrays(1, &id);
 }

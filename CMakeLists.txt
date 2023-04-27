@@ -15,9 +15,11 @@ set(SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/shader.cpp
         ${PROJECT_SOURCE_DIR}/vertexBuffer.cpp
         ${PROJECT_SOURCE_DIR}/texture.cpp
+        ${PROJECT_SOURCE_DIR}/camera.cpp
         ${PROJECT_SOURCE_DIR}/stb.cpp)
 
 add_executable(graphicsTest1 ${SOURCE_FILES})
+target_compile_definitions(graphicsTest1 PUBLIC SCREEN_WIDTH=800 SCREEN_HEIGHT=800)
 
-target_include_directories(graphicsTest1 PUBLIC src/include ${CMAKE_INSTALL_PREFIX}/include/glad)
+target_include_directories(graphicsTest1 PUBLIC ${CMAKE_INSTALL_PREFIX}/include/glad)
 target_link_libraries(graphicsTest1 GL glfw)

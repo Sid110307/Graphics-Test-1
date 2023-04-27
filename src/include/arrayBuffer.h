@@ -1,14 +1,13 @@
 #pragma once
-
 #include <glad/glad.h>
 
 class ArrayBuffer
 {
 public:
-	GLuint ID;
+	GLuint id;
 	ArrayBuffer(GLuint*, long);
 
-	void Bind() const;
-	void Unbind();
-	void Destroy();
+	void bind() const;
+	void unbind();
+	void destroy();
 };

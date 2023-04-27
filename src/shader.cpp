@@ -1,39 +1,39 @@
-#include "shader.h"
+#include "include/shader.h"
 
 Shader::Shader()
 {
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, nullptr);
 	glCompileShader(vertexShader);
-	CheckCompileErrors(vertexShader, "VERTEX");
+	checkCompileErrors(vertexShader, "VERTEX");
 
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentSource, nullptr);
 	glCompileShader(fragmentShader);
-	CheckCompileErrors(fragmentShader, "FRAGMENT");
+	checkCompileErrors(fragmentShader, "FRAGMENT");
 
-	ID = glCreateProgram();
-	glAttachShader(ID, vertexShader);
-	glAttachShader(ID, fragmentShader);
+	id = glCreateProgram();
+	glAttachShader(id, vertexShader);
+	glAttachShader(id, fragmentShader);
 
-	glLinkProgram(ID);
-	CheckCompileErrors(ID, "PROGRAM");
+	glLinkProgram(id);
+	checkCompileErrors(id, "PROGRAM");
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 }
 
-void Shader::Activate() const
+void Shader::activate() const
 {
-	glUseProgram(ID);
+	glUseProgram(id);
 }
 
-void Shader::Destroy() const
+void Shader::destroy() const
 {
-	glDeleteProgram(ID);
+	glDeleteProgram(id);
 }
 
-void Shader::CheckCompileErrors(GLuint shader, const std::string &type) const
+void Shader::checkCompileErrors(GLuint shader, const std::string &type) const
 {
 	GLint success;
 	GLchar infoLog[1024];

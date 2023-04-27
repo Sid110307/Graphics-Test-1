@@ -6,12 +6,12 @@
 class ArrayObject
 {
 public:
-	GLuint ID;
+	GLuint id;
 
 	ArrayObject();
-	void LinkAttribute(VertexBuffer, GLuint, GLint, GLenum, GLint, void*);
+	void linkAttribute(VertexBuffer, GLuint, GLint, GLenum, GLint, void*);
 
-	void Bind() const;
-	void Unbind();
-	void Destroy();
+	void bind() const;
+	void unbind();
+	void destroy();
 };

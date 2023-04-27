@@ -5,10 +5,10 @@
 class VertexBuffer
 {
 public:
-	GLuint ID;
+	GLuint id;
 	VertexBuffer(GLfloat*, long);
 
-	void Bind() const;
-	void Unbind();
-	void Destroy();
+	void bind() const;
+	void unbind();
+	void destroy();
 };
