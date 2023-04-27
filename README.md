@@ -8,7 +8,8 @@
 * [CMake](https://cmake.org/download/) v3.2+
 * [GLFW](https://www.glfw.org/) v3.3+
 * [STB Image Header](https://github.com/nothings/stb/blob/master/stb_image.h) v2.20+
-* [GLAD](https://glad.dav1d.de/#language=c&specification=gl&api=gl%3D4.0&api=gles1%3Dnone&api=gles2%3Dnone&api=glsc2%3Dnone&profile=core&localfiles=on) v1.0.4+
+* [GLAD](https://glad.dav1d.de/#language=c&specification=gl&api=gl%3D4.0&api=gles1%3Dnone&api=gles2%3Dnone&api=glsc2%3Dnone&profile=core&localfiles=on)
+  v1.0.4+
 
 ## Before compiling
 

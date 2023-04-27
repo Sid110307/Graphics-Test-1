@@ -5,13 +5,14 @@
 
 #include "shader.h"
 
-class Texture {
+class Texture
+{
 public:
 	GLuint ID;
 	GLenum textureType;
-	
+
 	Texture(const GLchar*, GLenum, GLenum, GLenum, GLenum);
-	
+
 	void textureUnit(Shader &, const GLchar*, GLuint);
 	void Bind();
 	void Unbind();

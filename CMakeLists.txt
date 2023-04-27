@@ -14,7 +14,7 @@ set(SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/arrayObject.cpp
         ${PROJECT_SOURCE_DIR}/shader.cpp
         ${PROJECT_SOURCE_DIR}/vertexBuffer.cpp
-	${PROJECT_SOURCE_DIR}/texture.cpp
+        ${PROJECT_SOURCE_DIR}/texture.cpp
         ${PROJECT_SOURCE_DIR}/stb.cpp)
 
 add_executable(graphicsTest1 ${SOURCE_FILES})

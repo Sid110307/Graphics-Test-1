@@ -33,7 +33,7 @@ void Shader::Destroy() const
 	glDeleteProgram(ID);
 }
 
-void Shader::CheckCompileErrors(GLuint shader, const std::string& type) const
+void Shader::CheckCompileErrors(GLuint shader, const std::string &type) const
 {
 	GLint success;
 	GLchar infoLog[1024];
@@ -47,8 +47,7 @@ void Shader::CheckCompileErrors(GLuint shader, const std::string& type) const
 			std::cerr << "Error: Shader compilation failed (" << infoLog << ")"
 					  << std::endl;
 		}
-	}
-	else
+	} else
 	{
 		glGetProgramiv(shader, GL_LINK_STATUS, &success);
 		if (!success)

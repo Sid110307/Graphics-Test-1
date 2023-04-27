@@ -27,8 +27,12 @@ private:
 		out vec2 outputTextureCoords;
 		uniform float scale;
 
+		uniform mat4 model;
+		uniform mat4 view;
+		uniform mat4 projection;
+
 		void main() {
-			gl_Position = vec4(position.x + (position.x * scale), position.y + (position.y * scale), position.z + (position.z * scale), 1.0f);
+			gl_Position = projection * view * model * vec4(position * scale, 1.0f);
 
 			outputColor = color;
 			outputTextureCoords = textureCoords;
@@ -49,5 +53,5 @@ private:
 		}
 	)glsl";
 
-	void CheckCompileErrors(GLuint shader, const std::string& type) const;
+	void CheckCompileErrors(GLuint shader, const std::string &type) const;
 };

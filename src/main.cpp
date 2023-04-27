@@ -1,10 +1,12 @@
 #include <iostream>
-#include <cmath>
-#include <filesystem>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "shader.h"
 #include "texture.h"
@@ -15,17 +17,22 @@ constexpr int SCREEN_WIDTH = 800;
 constexpr int SCREEN_HEIGHT = 800;
 
 GLfloat vertices[] = {
-//  Position              Color               Texture coordinates
-//  X      Y      Z       R     G     B       X     Y
-	-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
-	-0.5f, 0.5f,  0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-	0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-	0.5f,  -0.5f, 0.0f,   0.0f, 0.0f, 0.5f,   1.0f, 0.0f,
+		//  Position              Color               Texture coordinates
+		//  X      Y      Z       R     G     B       X     Y
+		-0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f,
+		-0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f,
+		0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f,
+		0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f,
+		0.0f, 0.75f, 0.0f, 0.92f, 0.86f, 0.76f, 2.5f, 5.0f,
 };
 
 GLuint indices[] = {
-	0, 1, 2,
-	2, 3, 0,
+		0, 1, 2,
+		0, 2, 3,
+		0, 1, 4,
+		1, 2, 4,
+		2, 3, 4,
+		3, 0, 4,
 };
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
@@ -42,8 +49,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	if (window == nullptr)
 	{
-		std::cerr << "Error: Failed to create window (" << std::strerror(errno)
-				  << ")" << std::endl;
+		std::cerr << "Error: Failed to create window (" << std::strerror(errno) << ")" << std::endl;
 		glfwTerminate();
 
 		return EXIT_FAILURE;
@@ -63,10 +69,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	IBO.Bind();
 
 	VAO.LinkAttribute(VBO, 0, 3, GL_FLOAT, 8 * sizeof(GLfloat), nullptr);
-	VAO.LinkAttribute(VBO, 1, 3, GL_FLOAT, 8 * sizeof(GLfloat),
-					  (void*) (3 * sizeof(GLfloat)));
-	VAO.LinkAttribute(VBO, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat),
-					  (void*) (6 * sizeof(GLfloat)));
+	VAO.LinkAttribute(VBO, 1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (void*) (3 * sizeof(GLfloat)));
+	VAO.LinkAttribute(VBO, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (void*) (6 * sizeof(GLfloat)));
 
 	VAO.Unbind();
 	VBO.Unbind();
@@ -74,13 +78,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	GLint shaderScale = glGetUniformLocation(shader.ID, "scale");
 
-	std::string cwd = std::filesystem::current_path().string();
-	cwd = cwd.substr(0, cwd.find("bin") - 1);
-	cwd += "/tests/textures/1920x1080.jpg";
-	
-	std::cout << cwd << std::endl;
-
-	Texture texture(cwd.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture texture("../tests/textures/bricks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 	texture.textureUnit(shader, "textureSampler", 0);
 
 	while (!glfwWindowShouldClose(window))
@@ -89,12 +87,26 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		shader.Activate();
 
-		glUniform1f(shaderScale, 0.5f);
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (GLfloat) SCREEN_WIDTH / (GLfloat) SCREEN_HEIGHT,
+												0.1f, 100.0f);
+
+		model = glm::rotate(model, (GLfloat) glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		GLint modelLocation = glGetUniformLocation(shader.ID, "model");
+		GLint viewLocation = glGetUniformLocation(shader.ID, "view");
+		GLint projectionLocation = glGetUniformLocation(shader.ID, "projection");
+
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
+		glUniform1f(shaderScale, 1.0f);
 		texture.Bind();
 
 		VAO.Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint),
-					   GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -103,7 +115,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	VAO.Destroy();
 	IBO.Destroy();
 	VBO.Destroy();
-	
+
 	texture.Destroy();
 	shader.Destroy();
 
