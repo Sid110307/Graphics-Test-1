@@ -9,6 +9,6 @@ public:
 	ArrayBuffer(GLuint*, long);
 
 	void bind() const;
-	void unbind();
+	static void unbind();
 	void destroy();
 };

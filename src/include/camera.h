@@ -27,7 +27,7 @@ private:
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 originalPosition = position, originalOrientation = orientation, originalUp = up;
 
-	glm::mat4 cameraMatrix;
+	glm::mat4 cameraMatrix = glm::mat4(1.0f);
 	GLint width, height;
 	GLfloat speed = 0.025f;
 	GLfloat sensitivity = 100.0f;

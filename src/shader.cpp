@@ -24,6 +24,9 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+
+	delete[] vertexSource;
+	delete[] fragmentSource;
 }
 
 void Shader::activate() const

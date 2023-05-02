@@ -9,6 +9,6 @@ public:
 	VertexBuffer(GLfloat*, long);
 
 	void bind() const;
-	void unbind();
+	static void unbind();
 	void destroy();
 };

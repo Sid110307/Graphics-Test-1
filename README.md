@@ -4,7 +4,7 @@
 
 ## Requirements
 
-* [OpenGL](https://www.opengl.org/) v4.0+
+* [OpenGL](https://www.opengl.org/) v3.3+
 * [CMake](https://cmake.org/download/) v3.2+
 * [GLFW](https://www.glfw.org/) v3.3+
 * [STB Image Header](https://github.com/nothings/stb/blob/master/stb_image.h) v2.20+

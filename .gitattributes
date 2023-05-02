@@ -1,1 +1,1 @@
-* text=auto
+lib/textures/** filter=lfs diff=lfs merge=lfs -text

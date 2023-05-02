@@ -5,8 +5,10 @@ in vec2 outputTextureCoords;
 in vec3 outputNormal;
 in vec3 outputFragmentPosition;
 
-out vec4 fragmentColor;
-uniform sampler2D textureSampler;
+out vec4 FragColor;
+
+uniform sampler2D texture0Sampler;
+uniform sampler2D texture1Sampler;
 
 uniform vec4 lightColor;
 uniform vec3 lightPosition;
@@ -22,7 +24,7 @@ void main() {
     float specularStrength = 0.5f;
     vec3 viewDirection = normalize(cameraPosition - outputFragmentPosition);
     vec3 reflectDirection = reflect(-lightDirection, normal);
-    float specular = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
+    float specular = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32.0f);
 
-    fragmentColor = texture(textureSampler, outputTextureCoords) * lightColor * (ambience + diffuse + specularStrength * specular);
+    FragColor = texture(texture0Sampler, outputTextureCoords) * lightColor * (ambience + diffuse) + texture(texture1Sampler, outputTextureCoords).r * specularStrength * specular;
 }

@@ -19,7 +19,7 @@ set(SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/stb.cpp)
 
 add_executable(graphicsTest1 ${SOURCE_FILES})
-target_compile_definitions(graphicsTest1 PUBLIC SCREEN_WIDTH=800 SCREEN_HEIGHT=800)
+target_compile_definitions(graphicsTest1 PUBLIC SCREEN_WIDTH=1920 SCREEN_HEIGHT=1080)
 
 target_include_directories(graphicsTest1 PUBLIC ${CMAKE_INSTALL_PREFIX}/include/glad)
 target_link_libraries(graphicsTest1 GL glfw)

@@ -36,10 +36,8 @@ void Camera::keyboard(GLFWwindow* window)
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) position -= speed * up;
 		else position -= speed * orientation;
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		position -= glm::normalize(glm::cross(orientation, up)) * speed;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		position += glm::normalize(glm::cross(orientation, up)) * speed;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) position -= glm::normalize(glm::cross(orientation, up)) * speed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) position += glm::normalize(glm::cross(orientation, up)) * speed;
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		position = originalPosition;

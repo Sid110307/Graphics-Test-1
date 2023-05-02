@@ -9,9 +9,9 @@ public:
 	GLuint id;
 
 	ArrayObject();
-	void linkAttribute(VertexBuffer, GLuint, GLint, GLenum, GLint, void*);
+	static void linkAttribute(VertexBuffer, GLuint, GLint, GLenum, GLint, void*);
 
 	void bind() const;
-	void unbind();
+	static void unbind();
 	void destroy();
 };

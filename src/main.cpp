@@ -15,40 +15,15 @@
 #include "include/camera.h"
 
 GLfloat vertices[] = {
-		// Bottom
-		-0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		-0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 5.0f, 0.0f, -1.0f, 0.0f,
-		0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 5.0f, 0.0f, -1.0f, 0.0f,
-		0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-
-		// Left
-		-0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f, -0.75f, -0.5f, 0.0f,
-		-0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f, -0.75f, -0.5f, 0.0f,
-		0.0f, 0.75f, 0.0f, 0.92, 0.86, 0.76, 2.5f, 5.0f, -0.75f, -0.5f, 0.0f,
-
-		// Back
-		-0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f, 0.0f, -0.5f, -0.75f,
-		0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f, 0.0f, -0.5f, -0.75f,
-		0.0f, 0.75f, 0.0f, 0.92, 0.86, 0.76, 2.5f, 5.0f, 0.0f, -0.5f, -0.75f,
-
-		// Right
-		0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f, 0.75f, 0.5f, 0.0f,
-		0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f, 0.75f, 0.5f, 0.0f,
-		0.0f, 0.75f, 0.0f, 0.92, 0.86, 0.76, 2.5f, 5.0f, 0.75f, 0.5f, 0.0f,
-
-		// Front
-		0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f, 0.0f, 0.5f, 0.75f,
-		-0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f, 0.0f, 0.5f, 0.75f,
-		0.0f, 0.75f, 0.0f, 0.92, 0.86, 0.76, 2.5f, 5.0f, 0.0f, 0.5f, 0.75f,
+		-1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f
 };
 
 GLuint indices[] = {
-		0, 1, 2, // Bottom
-		0, 2, 3, // Bottom
-		4, 6, 5, // Left
-		7, 9, 8, // Back
-		10, 12, 11, // Right
-		13, 15, 14 // Front
+		0, 1, 2,
+		0, 2, 3
 };
 
 GLfloat lightVertices[] = {
@@ -81,13 +56,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	glfwInit();
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT,
-										  "Graphics Test 1", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Graphics Test 1", nullptr, nullptr);
 
 	if (window == nullptr)
 	{
@@ -110,14 +84,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	ArrayBuffer IBO(indices, sizeof(indices));
 	IBO.bind();
 
-	VAO.linkAttribute(VBO, 0, 3, GL_FLOAT, 11 * sizeof(GLfloat), nullptr);
-	VAO.linkAttribute(VBO, 1, 3, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (3 * sizeof(GLfloat)));
-	VAO.linkAttribute(VBO, 2, 2, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (6 * sizeof(GLfloat)));
-	VAO.linkAttribute(VBO, 3, 3, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (8 * sizeof(GLfloat)));
+	ArrayObject::linkAttribute(VBO, 0, 3, GL_FLOAT, 11 * sizeof(GLfloat), nullptr);
+	ArrayObject::linkAttribute(VBO, 1, 3, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (3 * sizeof(GLfloat)));
+	ArrayObject::linkAttribute(VBO, 2, 2, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (6 * sizeof(GLfloat)));
+	ArrayObject::linkAttribute(VBO, 3, 3, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (8 * sizeof(GLfloat)));
 
-	VAO.unbind();
-	VBO.unbind();
-	IBO.unbind();
+	ArrayObject::unbind();
+	VertexBuffer::unbind();
+	ArrayBuffer::unbind();
 
 	Shader lightShader("../lib/shaders/lightVertex.glsl", "../lib/shaders/lightFragment.glsl");
 	ArrayObject lightVAO;
@@ -125,11 +99,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	VertexBuffer lightVBO(lightVertices, sizeof(lightVertices));
 	ArrayBuffer lightIBO(lightIndices, sizeof(lightIndices));
-	lightVAO.linkAttribute(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(GLfloat), nullptr);
+	ArrayObject::linkAttribute(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(GLfloat), nullptr);
 
-	lightVAO.unbind();
-	lightVBO.unbind();
-	lightIBO.unbind();
+	ArrayObject::unbind();
+	VertexBuffer::unbind();
+	ArrayBuffer::unbind();
 
 	glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
 	glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -148,8 +122,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	glUniform4f(glGetUniformLocation(shader.id, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shader.id, "lightPosition"), lightPos.x, lightPos.y, lightPos.z);
 
-	Texture texture("../lib/textures/bricks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
-	texture.textureUnit(shader, "textureSampler", 0);
+	Texture texture("../lib/textures/bricks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture::textureUniform(shader, "texture0Sampler", 0);
+
+	Texture specularMap("../lib/textures/bricks_specular.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RED, GL_UNSIGNED_BYTE);
+	Texture::textureUniform(shader, "texture1Sampler", 1);
 
 	glEnable(GL_DEPTH_TEST);
 	glm::vec3 cameraPosition(0.0f, 0.0f, 2.0f);
@@ -168,6 +145,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 					cameraPosition.z);
 		camera.createMatrix(shader, "camMatrix");
 		texture.bind();
+		specularMap.bind();
 
 		VAO.bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, nullptr);
@@ -180,6 +158,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	texture.unbind();
+	specularMap.unbind();
 
 	VAO.destroy();
 	IBO.destroy();
