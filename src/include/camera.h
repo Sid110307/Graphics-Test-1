@@ -15,18 +15,22 @@
 class Camera
 {
 public:
+	Camera(GLint, GLint, glm::vec3);
+
+	void setMatrix(GLfloat, GLfloat, GLfloat);
+	void createMatrix(Shader &, const char*);
+	void keyboard(GLFWwindow*);
+
+private:
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 orientation = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 originalPosition = position, originalOrientation = orientation, originalUp = up;
 
+	glm::mat4 cameraMatrix;
 	GLint width, height;
-	GLfloat speed = 0.1f;
+	GLfloat speed = 0.025f;
 	GLfloat sensitivity = 100.0f;
 
 	bool firstMouse = true;
-	Camera(GLint, GLint, glm::vec3);
-
-	void matrix(GLfloat, GLfloat, GLfloat, Shader &, const char*) const;
-	void keyboard(GLFWwindow*);
 };

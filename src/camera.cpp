@@ -11,12 +11,17 @@ Camera::Camera(GLint width, GLint height, glm::vec3 position)
 	originalUp = up;
 }
 
-void Camera::matrix(GLfloat fov, GLfloat nearPlane, GLfloat farPlane, Shader &shader, const char* uniform) const
+void Camera::setMatrix(GLfloat fov, GLfloat nearPlane, GLfloat farPlane)
 {
 	glm::mat4 view = glm::lookAt(position, position + orientation, up);
 	glm::mat4 projection = glm::perspective(glm::radians(fov), (GLfloat) width / (GLfloat) height, nearPlane, farPlane);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
+	cameraMatrix = projection * view;
+}
+
+void Camera::createMatrix(Shader &shader, const char* uniform)
+{
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
 }
 
 void Camera::keyboard(GLFWwindow* window)

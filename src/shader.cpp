@@ -1,7 +1,10 @@
 #include "include/shader.h"
 
-Shader::Shader()
+Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
+	const GLchar* vertexSource = readShader(vertexPath);
+	const GLchar* fragmentSource = readShader(fragmentPath);
+
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, nullptr);
 	glCompileShader(vertexShader);
@@ -33,7 +36,7 @@ void Shader::destroy() const
 	glDeleteProgram(id);
 }
 
-void Shader::checkCompileErrors(GLuint shader, const std::string &type) const
+void Shader::checkCompileErrors(GLuint shader, const std::string &type)
 {
 	GLint success;
 	GLchar infoLog[1024];
@@ -44,8 +47,7 @@ void Shader::checkCompileErrors(GLuint shader, const std::string &type) const
 		if (!success)
 		{
 			glGetShaderInfoLog(shader, sizeof(infoLog), nullptr, infoLog);
-			std::cerr << "Error: Shader compilation failed (" << infoLog << ")"
-					  << std::endl;
+			std::cerr << "Error: Shader compilation failed (" << infoLog << ")" << std::endl;
 		}
 	} else
 	{
@@ -53,8 +55,30 @@ void Shader::checkCompileErrors(GLuint shader, const std::string &type) const
 		if (!success)
 		{
 			glGetProgramInfoLog(shader, sizeof(infoLog), nullptr, infoLog);
-			std::cerr << "Error: Shader program linking failed (" << infoLog
-					  << ")" << std::endl;
+			std::cerr << "Error: Shader program linking failed (" << infoLog << ")" << std::endl;
 		}
 	}
+}
+
+const GLchar* Shader::readShader(const GLchar* path)
+{
+	std::ifstream file;
+	std::stringstream stream;
+
+	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		file.open(path);
+		stream << file.rdbuf();
+		file.close();
+	}
+	catch (std::ifstream::failure &e)
+	{
+		std::cerr << "Error: Shader file could not be read (" << path << ")" << std::endl;
+	}
+
+	const GLchar* shaderSource = new GLchar[stream.str().length() + 1];
+	std::strcpy(const_cast<GLchar*>(shaderSource), stream.str().c_str());
+
+	return shaderSource;
 }
