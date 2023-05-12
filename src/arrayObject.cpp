@@ -11,7 +11,7 @@ void ArrayObject::linkAttribute(VertexBuffer object, GLuint layout, GLint size, 
 
 	glVertexAttribPointer(layout, size, type, GL_FALSE, stride, offset);
 	glEnableVertexAttribArray(layout);
-	object.unbind();
+	VertexBuffer::unbind();
 }
 
 void ArrayObject::bind() const

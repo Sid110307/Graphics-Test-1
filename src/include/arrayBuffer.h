@@ -1,12 +1,13 @@
 #pragma once
 
+#include <vector>
 #include <glad/glad.h>
 
 class ArrayBuffer
 {
 public:
 	GLuint id;
-	ArrayBuffer(GLuint*, long);
+	explicit ArrayBuffer(std::vector<GLuint> &);
 
 	void bind() const;
 	static void unbind();

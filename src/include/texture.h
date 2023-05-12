@@ -9,13 +9,13 @@ class Texture
 {
 public:
 	GLuint id = 0;
-	GLenum textureType;
+	const char* textureType;
 	GLuint textureUnit;
 
-	Texture(const GLchar*, GLenum, GLuint, GLenum, GLenum);
+	Texture(const GLchar*, const char*, GLuint, GLenum, GLenum);
 
 	static void textureUniform(Shader &shader, const GLchar* uniform, GLuint unit);
 	void bind() const;
-	void unbind() const;
+	static void unbind() ;
 	void destroy();
 };

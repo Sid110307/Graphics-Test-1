@@ -1,24 +1,14 @@
-#include <iostream>
+#include "include/mesh.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "include/shader.h"
-#include "include/texture.h"
-#include "include/arrayObject.h"
-#include "include/arrayBuffer.h"
-#include "include/camera.h"
-
-GLfloat vertices[] = {
-		-1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f
+Vertex vertices[] = {
+		Vertex{glm::vec3(-1.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(1.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(1.0f, 0.0f)}
 };
 
 GLuint indices[] = {
@@ -26,15 +16,23 @@ GLuint indices[] = {
 		0, 2, 3
 };
 
-GLfloat lightVertices[] = {
-		-0.1f, -0.1f, 0.1f,
-		-0.1f, -0.1f, -0.1f,
-		0.1f, -0.1f, -0.1f,
-		0.1f, -0.1f, 0.1f,
-		-0.1f, 0.1f, 0.1f,
-		-0.1f, 0.1f, -0.1f,
-		0.1f, 0.1f, -0.1f,
-		0.1f, 0.1f, 0.1f
+Vertex lightVertices[] = {
+		Vertex{glm::vec3(-0.1f, -0.1f, 0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-0.1f, -0.1f, -0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(0.1f, -0.1f, -0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(0.1f, -0.1f, 0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-0.1f, 0.1f, 0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-0.1f, 0.1f, -0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(0.1f, 0.1f, -0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f),
+			   glm::vec2(0.0f, 0.0f)}
 };
 
 GLuint lightIndices[] = {
@@ -62,7 +60,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Graphics Test 1", nullptr, nullptr);
-
 	if (window == nullptr)
 	{
 		std::cerr << "Error: Failed to create window (" << std::strerror(errno) << ")" << std::endl;
@@ -75,35 +72,21 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	Texture textures[] = {
+			Texture("../lib/textures/bricks.png", "diffuse", GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE),
+			Texture("../lib/textures/bricks_specular.png", "specular", GL_TEXTURE1, GL_RED, GL_UNSIGNED_BYTE)
+	};
+
 	Shader shader("../lib/shaders/modelVertex.glsl", "../lib/shaders/modelFragment.glsl");
-
-	ArrayObject VAO;
-	VAO.bind();
-
-	VertexBuffer VBO(vertices, sizeof(vertices));
-	ArrayBuffer IBO(indices, sizeof(indices));
-	IBO.bind();
-
-	ArrayObject::linkAttribute(VBO, 0, 3, GL_FLOAT, 11 * sizeof(GLfloat), nullptr);
-	ArrayObject::linkAttribute(VBO, 1, 3, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (3 * sizeof(GLfloat)));
-	ArrayObject::linkAttribute(VBO, 2, 2, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (6 * sizeof(GLfloat)));
-	ArrayObject::linkAttribute(VBO, 3, 3, GL_FLOAT, 11 * sizeof(GLfloat), (void*) (8 * sizeof(GLfloat)));
-
-	ArrayObject::unbind();
-	VertexBuffer::unbind();
-	ArrayBuffer::unbind();
+	std::vector<Vertex> verticesVector(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	std::vector<GLuint> indicesVector(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector<Texture> texturesVector(textures, textures + sizeof(textures) / sizeof(Texture));
+	Mesh floor(verticesVector, indicesVector, texturesVector);
 
 	Shader lightShader("../lib/shaders/lightVertex.glsl", "../lib/shaders/lightFragment.glsl");
-	ArrayObject lightVAO;
-	lightVAO.bind();
-
-	VertexBuffer lightVBO(lightVertices, sizeof(lightVertices));
-	ArrayBuffer lightIBO(lightIndices, sizeof(lightIndices));
-	ArrayObject::linkAttribute(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(GLfloat), nullptr);
-
-	ArrayObject::unbind();
-	VertexBuffer::unbind();
-	ArrayBuffer::unbind();
+	std::vector<Vertex> lightVerticesVector(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+	std::vector<GLuint> lightIndicesVector(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+	Mesh light(lightVerticesVector, lightIndicesVector, texturesVector);
 
 	glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
 	glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -122,14 +105,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	glUniform4f(glGetUniformLocation(shader.id, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shader.id, "lightPosition"), lightPos.x, lightPos.y, lightPos.z);
 
-	Texture texture("../lib/textures/bricks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	Texture::textureUniform(shader, "texture0Sampler", 0);
-
-	Texture specularMap("../lib/textures/bricks_specular.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RED, GL_UNSIGNED_BYTE);
-	Texture::textureUniform(shader, "texture1Sampler", 1);
-
 	glEnable(GL_DEPTH_TEST);
-	glm::vec3 cameraPosition(0.0f, 0.0f, 2.0f);
+	glm::vec3 cameraPosition(0.0f, 2.0f, 2.0f);
 	Camera camera(SCREEN_WIDTH, SCREEN_HEIGHT, cameraPosition);
 
 	while (!glfwWindowShouldClose(window))
@@ -140,36 +117,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		camera.keyboard(window);
 		camera.setMatrix(45.0f, 0.1f, 100.0f);
 
-		shader.activate();
-		glUniform3f(glGetUniformLocation(shader.id, "cameraPosition"), cameraPosition.x, cameraPosition.y,
-					cameraPosition.z);
-		camera.createMatrix(shader, "camMatrix");
-		texture.bind();
-		specularMap.bind();
-
-		VAO.bind();
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, nullptr);
-
-		lightShader.activate();
-		camera.createMatrix(lightShader, "camMatrix");
-		lightVAO.bind();
-		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(GLuint), GL_UNSIGNED_INT, nullptr);
+		floor.draw(shader, camera);
+		light.draw(lightShader, camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	texture.unbind();
-	specularMap.unbind();
-
-	VAO.destroy();
-	IBO.destroy();
-	VBO.destroy();
-	lightVAO.destroy();
-	lightIBO.destroy();
-	lightVBO.destroy();
-
-	texture.destroy();
 	shader.destroy();
 	lightShader.destroy();
 
