@@ -106,7 +106,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	glUniform3f(glGetUniformLocation(shader.id, "lightPosition"), lightPos.x, lightPos.y, lightPos.z);
 
 	glEnable(GL_DEPTH_TEST);
-	glm::vec3 cameraPosition(0.0f, 2.0f, 2.0f);
+	glm::vec3 cameraPosition(0.0f, 0.0f, 2.0f);
 	Camera camera(SCREEN_WIDTH, SCREEN_HEIGHT, cameraPosition);
 
 	while (!glfwWindowShouldClose(window))
