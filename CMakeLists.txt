@@ -27,4 +27,5 @@ target_link_libraries(graphicsTest1 glfw)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(graphicsTest1 GL)
+    target_include_directories(graphicsTest1 PUBLIC ${CMAKE_PREFIX_PATH}/include/glad)
 endif ()
