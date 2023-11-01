@@ -73,17 +73,17 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	Texture textures[] = {
-			Texture("../lib/textures/bricks.png", "diffuse", GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE),
-			Texture("../lib/textures/bricks_specular.png", "specular", GL_TEXTURE1, GL_RED, GL_UNSIGNED_BYTE)
+			Texture("lib/textures/bricks.png", "diffuse", GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE),
+			Texture("lib/textures/bricks_specular.png", "specular", GL_TEXTURE1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
-	Shader shader("../lib/shaders/modelVertex.glsl", "../lib/shaders/modelFragment.glsl");
+	Shader shader("lib/shaders/modelVertex.glsl", "lib/shaders/modelFragment.glsl");
 	std::vector<Vertex> verticesVector(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector<GLuint> indicesVector(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> texturesVector(textures, textures + sizeof(textures) / sizeof(Texture));
 	Mesh floor(verticesVector, indicesVector, texturesVector);
 
-	Shader lightShader("../lib/shaders/lightVertex.glsl", "../lib/shaders/lightFragment.glsl");
+	Shader lightShader("lib/shaders/lightVertex.glsl", "lib/shaders/lightFragment.glsl");
 	std::vector<Vertex> lightVerticesVector(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightIndicesVector(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	Mesh light(lightVerticesVector, lightIndicesVector, texturesVector);
