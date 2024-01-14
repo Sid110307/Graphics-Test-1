@@ -7,8 +7,8 @@ in vec3 outputFragmentPosition;
 
 out vec4 FragColor;
 
-uniform sampler2D texture0Sampler;
-uniform sampler2D texture1Sampler;
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
 
 uniform vec4 lightColor;
 uniform vec3 lightPosition;
@@ -30,7 +30,10 @@ vec4 pointLight() {
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float specular = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32.0f) * specularStrength;
 
-    return (texture(texture0Sampler, outputTextureCoords) * (diffuse * intensity + ambience) + texture(texture1Sampler, outputTextureCoords).r * specular * intensity) * lightColor;
+    vec4 diffuseTex = vec4(texture(texture_diffuse1, outputTextureCoords).rgb * (diffuse + ambience), 1.0f);
+    vec4 specularTex = vec4(texture(texture_specular1, outputTextureCoords).rgb * specular, 1.0f);
+
+    return (diffuseTex + specularTex) * lightColor * intensity;
 }
 
 vec4 directionalLight() {
@@ -44,7 +47,10 @@ vec4 directionalLight() {
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float specular = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32.0f) * specularStrength;
 
-    return (texture(texture0Sampler, outputTextureCoords) * (diffuse + ambience) + texture(texture1Sampler, outputTextureCoords).r * specular) * lightColor;
+    vec4 diffuseTex = vec4(texture(texture_diffuse1, outputTextureCoords).rgb * (diffuse + ambience), 1.0f);
+    vec4 specularTex = vec4(texture(texture_specular1, outputTextureCoords).rgb * specular, 1.0f);
+
+    return (diffuseTex + specularTex) * lightColor;
 }
 
 vec4 spotLight() {
@@ -64,7 +70,10 @@ vec4 spotLight() {
     float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
     float intensity = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
-    return (texture(texture0Sampler, outputTextureCoords) * (diffuse * intensity + ambience) + texture(texture1Sampler, outputTextureCoords).r * specular * intensity) * lightColor;
+    vec4 diffuseTex = vec4(texture(texture_diffuse1, outputTextureCoords).rgb * (diffuse + ambience), 1.0f);
+    vec4 specularTex = vec4(texture(texture_specular1, outputTextureCoords).rgb * specular, 1.0f);
+
+    return (diffuseTex + specularTex) * lightColor * intensity;
 }
 
 void main() {
